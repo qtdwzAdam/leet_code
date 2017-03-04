@@ -33,17 +33,17 @@ class OneCheck(object):
         self.hold = deepcopy(self.base)
         self.test_list = list(self.base)
         self.num = len(self.hold)
-        self.val = 0
+        self.val = self.val if self.val > 0 else 0
 
     def set_ele(self, val):
-        change_base = val > 0
+        if val > 0:
+            if val in self.base:
+                self.base.remove(val)
         if self.val: return True, 'setted'
         try: val = abs(int(val))
         except: return True, 'not a int'
         if val not in self.hold:
             return True, 'not in hold'
-        if change_base:
-            self.base.remove(val)
         self.hold.remove(val)
         self.test_list = list(self.hold)
         self.num -= 1
@@ -58,6 +58,7 @@ class OneCheck(object):
         if val in self.hold:
             return False
         self.hold.add(val)
+        self.test_list.append(val)
         self.num += 1
         return True
 
@@ -67,6 +68,8 @@ class OneCheck(object):
         except: return False
         self.num = 9
         self.val = val
+        if val > 0:
+            self.base = {val}
         return True
 
     def unset_val(self, val):
@@ -85,31 +88,30 @@ class OneCheck(object):
 class Sudoku(object):
     def unset_one(self, x, y, val):
         for i in xrange(9):
-            self.board[x * 9 + i].unset_ele(val)
-            self.board[i * 9 + y].unset_ele(val)
+            if i != y:
+                self.board[x * 9 + i].unset_ele(val)
+            if i != x:
+                self.board[i * 9 + y].unset_ele(val)
         base_x = x/3 * 3
         base_y = y/3 * 3
         for idx in xrange(base_x, base_x + 3):
             for idy in xrange(base_y, base_y + 3):
+                if idx == x and idx == y: continue
                 if not self.board[idx * 9 + idy].unset_ele(val):
-                    print 'failed of group of unset'
                     return False
         return True
 
     def set_one(self, x, y, val):
         for i in xrange(9):
             if not self.board[x * 9 + i].set_ele(val):
-                print 'failed of x*9+i'
                 return False
             if not self.board[i * 9 + y].set_ele(val):
-                print 'failed of i*9+y'
                 return False
         base_x = x/3 * 3
         base_y = y/3 * 3
         for idx in xrange(base_x, base_x + 3):
             for idy in xrange(base_y, base_y + 3):
                 if not self.board[idx * 9 + idy].set_ele(val):
-                    print 'failed of group to set'
                     return False
         return True
 
@@ -119,11 +121,15 @@ class Sudoku(object):
             for idx_num, one_num in enumerate(one_line):
                 if self.board[idx_line*9 + idx_num].set_val(one_num):
                     self.set_one(idx_line, idx_num, int(one_num))
+        # for one_board in self.board:
+        #     one_board.revert_base()
 
         min_test = min(self.board, key=lambda x: x.num)
         self.steps = []
         while min_test.num < 9:
+            print min_test.idx
             if min_test.num == 0:
+                # min_test.revert_base()
                 last_step = self.steps.pop()
                 last_board = self.board[last_step[0]]
                 self.unset_one(last_board.idx/9, last_board.idx%9, last_step[1])
@@ -152,9 +158,8 @@ class Sudoku(object):
                         last_step = self.steps.pop()
                         last_board = self.board[last_step[0]]
                         self.unset_one(last_board.idx/9, last_board.idx%9, last_step[1])
-            pprint(self.get_output())
+            # pprint(self.get_output())
             min_test = min(self.board, key=lambda x: x.num)
-
 
     def get_output(self):
         out = []
@@ -195,9 +200,9 @@ if __name__ == '__main__':
     board = ["...2...63", "3....54.1", "..1..398.",
              ".......9.", "...538...", ".3.......",
              ".263..5..", "5.37....8", "47...1..."]
-    # board = ["1...7..3.", "83.6.....", "..29..6.8",
-    #          "6....49.7", ".9.....5.", "3.75....4",
-    #          "2.3..91..", ".....2.43", ".4..8...9"]
+    board = ["1...7..3.", "83.6.....", "..29..6.8",
+             "6....49.7", ".9.....5.", "3.75....4",
+             "2.3..91..", ".....2.43", ".4..8...9"]
     pprint(board)
     sol.solveSudoku(board)
     pprint(board)
