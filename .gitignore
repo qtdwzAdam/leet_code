@@ -4,3 +4,9 @@
 *~
 
 .idea/
+*.class
+.DS_Store
+*.exe
+*.out
+*.dSYM/
+output/

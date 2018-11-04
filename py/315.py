@@ -16,6 +16,7 @@ class Solution(object):
         for idx, val in enumerate(nums[1:]):
             sum_nums.append(sum_nums[idx] + val)
         for idx, val in enumerate(nums):
+            "ss"
             print '\nstartnew'
             print val
             left = idx
