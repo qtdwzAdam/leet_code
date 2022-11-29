@@ -16,9 +16,9 @@ class TreeNode(object):
         self.right = None
 
 
-def create_tree(msg_in):
+def create_tree(msg_in, method=int):
     msg = msg_in[1:-1].split(',')
-    msg = [(x.strip()) if x.strip()!="null" else None for x in msg]
+    msg = [method(x.strip()) if x.strip()!="null" else None for x in msg]
     if not len(msg):
         raise Exception('too short')
 
@@ -46,7 +46,7 @@ def create_tree(msg_in):
 
 def print_tree(root):
     if not root: return
-    print root.val
+    print(root.val)
     print_tree(root.left)
     print_tree(root.right)
 

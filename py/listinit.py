@@ -23,12 +23,19 @@ def init_list(arr):
         left = right
     return head
 
+def print_list(node):
+    ans = []
+    while node:
+        ans.append(node.val)
+        node = node.next
+    print(ans)
+    return ans
 
 def main():
     arr = [1,2,3,4, 41]
     a = init_list(arr)
     while a:
-        print a, a.val, a.next
+        print(a, a.val, a.next)
         a = a.next
     return 0
 
