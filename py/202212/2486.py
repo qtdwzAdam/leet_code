@@ -43,6 +43,17 @@ class Solution(object):
         return len(t) - cur
 # @lc code=end
 
+tests = [
+    (
+        ('coaching', 'coding'),
+        (4)
+    ),
+    (
+        ('abcde', 'a'),
+        (0)
+    ),
+]
+
 def main():
     print('start')
     x = Solution().appendCharacters('coaching', 'coding')
