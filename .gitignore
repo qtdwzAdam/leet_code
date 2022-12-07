@@ -11,3 +11,7 @@
 *.dSYM/
 output/
 .vscode/
+
+.venv
+.venv38
+h74linter_cache.*
